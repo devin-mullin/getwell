@@ -1,37 +1,122 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
 
-You can use the [editor on GitHub](https://github.com/devin-mullin/getwell/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+    <title>Number guessing game</title>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+    <style>
+      html {
+        font-family: sans-serif;
+      }
 
-### Markdown
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+  </head>
 
-```markdown
-Syntax highlighted code block
+  <body>
+    <h1>Hope u feel better ;) <b>[THE GAME]</b> </h1>
 
-# Header 1
-## Header 2
-### Header 3
+    <p>pick a number between 1 and ... uhhhh.... i dont remember the number. Pick it and the game will tell you if you're gonna feel better in 5 minutes. This is so elegantly coded and programmed. Fuck man. Cool shit. GO!</p>
 
-- Bulleted
-- List
+    <div class="form">
+      <label for="guessField">pick a number you sick widdle baby :): </label>
+      <input type="text" id="guessField" class="guessField">
+      <input type="submit" value="Submit guess" class="guessSubmit">
+    </div>
 
-1. Numbered
-2. List
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+    </div>
 
-**Bold** and _Italic_ and `Code` text
+    <script>
 
-[Link](url) and ![Image](src)
-```
+      // Your JavaScript goes here
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+      let randomNumber = Math.floor(Math.random() * 100) + 1;
 
-### Jekyll Themes
+const guesses = document.querySelector('.guesses');
+const lastResult = document.querySelector('.lastResult');
+const lowOrHi = document.querySelector('.lowOrHi');
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/devin-mullin/getwell/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+const guessSubmit = document.querySelector('.guessSubmit');
+const guessField = document.querySelector('.guessField');
 
-### Support or Contact
+let guessCount = 1;
+let resetButton;
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+function checkGuess() {
+  let userGuess = Number(guessField.value);
+  if (guessCount === 1) {
+    guesses.textContent = 'Previous guesses: ';
+  }
+  guesses.textContent += userGuess + ' ';
+
+  if (userGuess === randomNumber) {
+    lastResult.textContent = 'Congratulations! You are no longer sick. You should run a marathon. You are the paragon of health. Thats so awesome dude. Im happy 4 u! :)';
+    lastResult.style.backgroundColor = 'green';
+    lowOrHi.textContent = '';
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = '!!!GAME OVER BITCH!!!';
+    setGameOver();
+  } else {
+    lastResult.textContent = 'Wrong guess you sick little scamp!!';
+    lastResult.style.backgroundColor = 'red';
+    if(userGuess < randomNumber) {
+      lowOrHi.textContent = 'Last guess was too low you little sickie! Try again! Disgusting!';
+    } else if(userGuess > randomNumber) {
+      lowOrHi.textContent = 'Last guess was too high...maybe you should lay off that bubonic chronic haha';
+    }
+  }
+
+  guessCount++;
+  guessField.value = '';
+  guessField.focus();
+}
+
+guessSubmit.addEventListener('click', checkGuess);
+
+function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement('button');
+  resetButton.textContent = 'Start new game';
+  document.body.append(resetButton);
+  resetButton.addEventListener('click', resetGame);
+}
+
+function resetGame() {
+  guessCount = 1;
+
+  const resetParas = document.querySelectorAll('.resultParas p');
+  for (let i = 0 ; i < resetParas.length ; i++) {
+    resetParas[i].textContent = '';
+  }
+
+  resetButton.parentNode.removeChild(resetButton);
+
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = '';
+  guessField.focus();
+
+  lastResult.style.backgroundColor = 'white';
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
+}
+    </script>
+  </body>
+</html>
